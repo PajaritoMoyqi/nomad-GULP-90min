@@ -1,0 +1,20 @@
+{
+  "name": "gulp-example",
+  "version": "1.0.0",
+  "description": "Gulp 90분 마스터하기 clone coding",
+  "repository": "https://github.com/PajaritoMoyqi/nomad-GULP-90min",
+  "author": "PajaritoMoyqi",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@babel/core": "^7.21.0",
+    "@babel/register": "^7.21.0",
+    "@babel/preset-env": "^7.20.2",
+    "gulp": "^4.0.2"
+  },
+  "scripts": {
+    "dev": "gulp dev",
+    "build": "gulp build"
+  }
+}
