@@ -3,7 +3,7 @@ import gpug from 'gulp-pug';
 import del from 'del';
 import ws from 'gulp-webserver';
 
-// index.pug to html
+// index.pug to index.html
 
 const routes = {
   pug: {
@@ -17,6 +17,8 @@ const pug = () => {
     .pipe(gpug())
     .pipe(gulp.dest(routes.pug.dest));
 }
+
+// webserver on
 
 const webserver = () => gulp.src(routes.pug.dest).pipe(ws({livereload: true, open: true}));
 
