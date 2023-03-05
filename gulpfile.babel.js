@@ -2,6 +2,7 @@ import gulp from 'gulp';
 import gpug from 'gulp-pug';
 import del from 'del';
 import ws from 'gulp-webserver';
+import gimage from 'gulp-image';
 
 // index.pug to index.html
 
@@ -11,7 +12,27 @@ const routes = {
     src: 'src/*.pug',
     dest: 'build/',
   },
+  img: {
+    src: "src/img/*",
+    dest: "build/img",
+  },
 };
+
+// clean the build folder
+
+const clean = () => {
+  return del([routes.pug.dest]);
+}
+
+// image
+
+const img = () => {
+  return gulp.src(routes.img.src)
+    .pipe(gimage())
+    .pipe(gulp.dest(routes.img.dest));
+}
+
+// pug to html
 
 const pug = () => {
   return gulp.src(routes.pug.src)
@@ -27,19 +48,15 @@ const webserver = () => gulp.src(routes.pug.dest).pipe(ws({livereload: true, ope
 
 const watch = () => {
   gulp.watch(routes.pug.watch, pug);
-}
-
-// clean the build folder
-
-const clean = () => {
-  return del([routes.pug.dest]);
+  gulp.watch(routes.img.src, img);
 }
 
 // series
 
-const prepare = gulp.series([clean]);
+const prepare = gulp.series([clean, img]);
 const assets = gulp.series([pug]);
-const postDev = gulp.parallel([webserver, watch]); // two task, so parallel
+// two task, so parallel
+const postDev = gulp.parallel([webserver, watch]);
 
 // main function
 

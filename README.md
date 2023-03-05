@@ -1,5 +1,10 @@
 노마드코더 "Gulp 90분 마스터하기" 강의 연습 repository입니다.
 
+### version dependency
+
+del@4.1.1
+gulp-image@6.2.1
+
 ### 2023/3/4
 
 폴더명에 `[]`가 들어가 있으면 안 된다....
