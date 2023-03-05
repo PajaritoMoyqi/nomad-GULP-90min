@@ -13,6 +13,8 @@
     "@babel/preset-env": "^7.20.2",
     "@babel/register": "^7.21.0",
     "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^8.0.0",
+    "gulp-csso": "^4.0.1",
     "gulp-image": "^6.2.1",
     "gulp-pug": "^5.0.0",
     "gulp-sass": "^5.1.0",
@@ -23,5 +25,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "gulp dev",
     "build": "gulp build"
-  }
+  },
+  "browserslist": [
+    "last 2 versions"
+  ]
 }

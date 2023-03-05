@@ -5,6 +5,8 @@ import ws from 'gulp-webserver';
 import gimage from 'gulp-image';
 import gsass from "gulp-sass";
 import nsass from "node-sass";
+import autoprefixer from 'gulp-autoprefixer';
+import miniCSS from 'gulp-csso';
 
 const sass = gsass(nsass);
 
@@ -54,6 +56,8 @@ const pug = () => {
 const styles = () => {
   return gulp.src(routes.scss.src)
     .pipe(sass().on("error", sass.logError))
+    .pipe(autoprefixer()) // setting is in package.json file
+    .pipe(miniCSS())
     .pipe(gulp.dest(routes.scss.dest));
 }
 
