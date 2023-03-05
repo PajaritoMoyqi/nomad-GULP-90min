@@ -3,6 +3,10 @@ import gpug from 'gulp-pug';
 import del from 'del';
 import ws from 'gulp-webserver';
 import gimage from 'gulp-image';
+import gsass from "gulp-sass";
+import nsass from "node-sass";
+
+const sass = gsass(nsass);
 
 // index.pug to index.html
 
@@ -14,8 +18,13 @@ const routes = {
   },
   img: {
     src: "src/img/*",
-    dest: "build/img",
+    dest: "build/img/",
   },
+  scss: {
+    watch: "src/scss/**/*.scss",
+    src: "src/scss/style.scss",
+    dest: "build/css/",
+  }
 };
 
 // clean the build folder
@@ -40,6 +49,14 @@ const pug = () => {
     .pipe(gulp.dest(routes.pug.dest));
 }
 
+// sass
+
+const styles = () => {
+  return gulp.src(routes.scss.src)
+    .pipe(sass().on("error", sass.logError))
+    .pipe(gulp.dest(routes.scss.dest));
+}
+
 // webserver on
 
 const webserver = () => gulp.src(routes.pug.dest).pipe(ws({livereload: true, open: true}));
@@ -49,12 +66,13 @@ const webserver = () => gulp.src(routes.pug.dest).pipe(ws({livereload: true, ope
 const watch = () => {
   gulp.watch(routes.pug.watch, pug);
   gulp.watch(routes.img.src, img);
+  gulp.watch(routes.scss.watch, styles);
 }
 
 // series
 
 const prepare = gulp.series([clean, img]);
-const assets = gulp.series([pug]);
+const assets = gulp.series([pug, styles]);
 // two task, so parallel
 const postDev = gulp.parallel([webserver, watch]);
 

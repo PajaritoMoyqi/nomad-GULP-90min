@@ -18,3 +18,7 @@ gulp-image@6.2.1
 gulp는 디버깅이 좀 쉽지 않은 것 같다...
 
 슬프다...
+
+### 2023/3/5
+
+underscore는 sass에게 compile하지 않도록 이야기를 해주는 용도다.
