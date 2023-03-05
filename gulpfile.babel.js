@@ -7,6 +7,8 @@ import gsass from "gulp-sass";
 import nsass from "node-sass";
 import autoprefixer from 'gulp-autoprefixer';
 import miniCSS from 'gulp-csso';
+import bro from 'gulp-bro';
+import babelify from 'babelify';
 
 const sass = gsass(nsass);
 
@@ -26,6 +28,11 @@ const routes = {
     watch: "src/scss/**/*.scss",
     src: "src/scss/style.scss",
     dest: "build/css/",
+  },
+  js: {
+    watch: "src/js/**/*.js",
+    src: "src/js/main.js",
+    dest: "build/js/",
   }
 };
 
@@ -61,6 +68,17 @@ const styles = () => {
     .pipe(gulp.dest(routes.scss.dest));
 }
 
+const js = () => {
+  return gulp.src(routes.js.src)
+    .pipe(bro({
+      transform: [
+        babelify.configure({ presets: ["@babel/preset-env"] }),
+        [ "uglifyify", { global: true } ]
+      ]
+    }))
+    .pipe(gulp.dest(routes.js.dest));
+}
+
 // webserver on
 
 const webserver = () => gulp.src(routes.pug.dest).pipe(ws({livereload: true, open: true}));
@@ -71,12 +89,13 @@ const watch = () => {
   gulp.watch(routes.pug.watch, pug);
   gulp.watch(routes.img.src, img);
   gulp.watch(routes.scss.watch, styles);
+  gulp.watch(routes.js.watch, js);
 }
 
 // series
 
 const prepare = gulp.series([clean, img]);
-const assets = gulp.series([pug, styles]);
+const assets = gulp.series([pug, styles, js]);
 // two task, so parallel
 const postDev = gulp.parallel([webserver, watch]);
 
