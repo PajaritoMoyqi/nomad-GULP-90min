@@ -7,6 +7,7 @@ import ws from 'gulp-webserver';
 
 const routes = {
   pug: {
+    watch: "src/**/*.pug",
     src: 'src/*.pug',
     dest: 'build/',
   },
@@ -22,6 +23,12 @@ const pug = () => {
 
 const webserver = () => gulp.src(routes.pug.dest).pipe(ws({livereload: true, open: true}));
 
+// watch files
+
+const watch = () => {
+  gulp.watch(routes.pug.watch, pug);
+}
+
 // clean the build folder
 
 const clean = () => {
@@ -32,7 +39,7 @@ const clean = () => {
 
 const prepare = gulp.series([clean]);
 const assets = gulp.series([pug]);
-const postDev = gulp.series([webserver]);
+const postDev = gulp.parallel([webserver, watch]); // two task, so parallel
 
 // main function
 
