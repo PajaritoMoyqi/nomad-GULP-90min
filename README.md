@@ -1,5 +1,7 @@
 노마드코더 "Gulp 90분 마스터하기" 강의 연습 repository입니다.
 
+https://pajaritomoyqi.github.io/nomad-GULP-90min
+
 ### version dependency
 
 del@4.1.1
