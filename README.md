@@ -24,3 +24,53 @@ gulp는 디버깅이 좀 쉽지 않은 것 같다...
 ### 2023/3/5
 
 underscore는 sass에게 compile하지 않도록 이야기를 해주는 용도다.
+
+### 2023/3/6
+
+만일 완전 같은 directory structure를 가지게 하고자 한다면 아래와 같이 하면 된다.
+
+```js
+gulp.src(["assets/file.doc"], {base: "."})
+  .pipe(gulp.dest("dist/"));
+```
+
+nomad 코드 기반으로 하자면 아래와 같다(delpoy와 dev 로직을 망치기 때문에, 코드는 수정하지 않았다)
+
+```js
+const img = () => {
+  return gulp.src(routes.img.src, {base: "."})
+    .pipe(gimage())
+    .pipe(gulp.dest(routes.img.dest));
+}
+
+// pug to html
+
+const pug = () => {
+  return gulp.src(routes.pug.src, {base: "."})
+    .pipe(gpug())
+    .pipe(gulp.dest(routes.pug.dest));
+}
+
+// sass
+
+const styles = () => {
+  return gulp.src(routes.scss.src, {base: "."})
+    .pipe(sass().on("error", sass.logError))
+    .pipe(autoprefixer()) // setting is in package.json file
+    .pipe(miniCSS())
+    .pipe(gulp.dest(routes.scss.dest));
+}
+
+// Javascript
+
+const js = () => {
+  return gulp.src(routes.js.src, {base: "."})
+    .pipe(bro({
+      transform: [
+        babelify.configure({ presets: ["@babel/preset-env"] }),
+        [ "uglifyify", { global: true } ]
+      ]
+    }))
+    .pipe(gulp.dest(routes.js.dest));
+}
+```
