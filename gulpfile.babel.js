@@ -107,12 +107,12 @@ const gh = () => {
 const prepare = gulp.series([clean, img]);
 const assets = gulp.series([pug, styles, js]);
 // two task, so parallel
-const postDev = gulp.parallel([webserver, watch]);
+const postDev = gulp.parallel([watch]);
 
 // main function
 
 export const build = gulp.series([prepare, assets]);
 
-export const dev = gulp.series([build, postDev]);
+export const dev = gulp.series([prepare, assets, postDev]);
 
 export const deploy = gulp.series([build, gh, clean]);
