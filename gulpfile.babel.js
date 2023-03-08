@@ -10,6 +10,8 @@ import miniCSS from 'gulp-csso';
 import bro from 'gulp-bro';
 import babelify from 'babelify';
 import ghPages from 'gulp-gh-pages';
+import gchanged from 'gulp-changed';
+import path from 'path';
 
 const sass = gsass(nsass);
 
@@ -47,6 +49,7 @@ const clean = () => {
 
 const img = () => {
   return gulp.src(routes.img.src)
+    .pipe(gchanged(routes.img.dest, {hasChanged: gchanged.compareLastModifiedTime}))
     .pipe(gimage())
     .pipe(gulp.dest(routes.img.dest));
 }
@@ -55,6 +58,7 @@ const img = () => {
 
 const pug = () => {
   return gulp.src(routes.pug.src)
+    .pipe(gchanged  (routes.pug.dest, {hasChanged: gchanged.compareLastModifiedTime}))
     .pipe(gpug())
     .pipe(gulp.dest(routes.pug.dest));
 }
@@ -63,6 +67,7 @@ const pug = () => {
 
 const styles = () => {
   return gulp.src(routes.scss.src)
+    .pipe(gchanged(routes.scss.dest, {hasChanged: gchanged.compareLastModifiedTime}))
     .pipe(sass().on("error", sass.logError))
     .pipe(autoprefixer()) // setting is in package.json file
     .pipe(miniCSS())
@@ -73,6 +78,7 @@ const styles = () => {
 
 const js = () => {
   return gulp.src(routes.js.src)
+    .pipe(gchanged(routes.js.dest, {hasChanged: gchanged.compareLastModifiedTime}))
     .pipe(bro({
       transform: [
         babelify.configure({ presets: ["@babel/preset-env"] }),
@@ -90,7 +96,12 @@ const webserver = () => gulp.src(routes.pug.dest).pipe(ws({livereload: true, ope
 
 const watch = () => {
   gulp.watch(routes.pug.watch, pug);
-  gulp.watch(routes.img.src, img);
+  gulp.watch(routes.img.src, img).on('unlink', function(filePath) {
+    const filePathFromSrc = path.relative(path.resolve('src/img/'), filePath);
+    const destFilePath = path.resolve(routes.img.dest, filePathFromSrc);
+
+    del.sync(destFilePath);
+  });
   gulp.watch(routes.scss.watch, styles);
   gulp.watch(routes.js.watch, js);
 }
@@ -104,12 +115,14 @@ const gh = () => {
 
 // series
 
-const prepare = gulp.series([clean, img]);
-const assets = gulp.series([pug, styles, js]);
+const prepare = gulp.series([clean]);
+const assets = gulp.series([img, pug, styles, js]);
 // two task, so parallel
 const postDev = gulp.parallel([watch]);
 
 // main function
+
+export const example = gulp.series([assets]);
 
 export const build = gulp.series([prepare, assets]);
 

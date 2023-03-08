@@ -17,6 +17,7 @@
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^8.0.0",
     "gulp-bro": "^2.0.0",
+    "gulp-changed": "^4.0.3",
     "gulp-csso": "^4.0.1",
     "gulp-gh-pages": "^0.5.4",
     "gulp-image": "^6.2.1",
@@ -29,7 +30,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "gulp dev",
     "build": "gulp build",
-    "deploy": "gulp deploy"
+    "deploy": "gulp deploy",
+    "example": "gulp example"
   },
   "browserslist": [
     "last 2 versions"
