@@ -94,16 +94,18 @@ const webserver = () => gulp.src(routes.pug.dest).pipe(ws({livereload: true, ope
 
 // watch files
 
+const watchUnlink = (unlinkDest, filePath) => {
+  const filePathFromSrc = path.relative(path.resolve(unlinkDest), filePath);
+  const destFilePath = path.resolve(routes.img.dest, filePathFromSrc);
+
+  del.sync(destFilePath);
+}
+
 const watch = () => {
   gulp.watch(routes.pug.watch, pug);
-  gulp.watch(routes.img.src, img).on('unlink', function(filePath) {
-    const filePathFromSrc = path.relative(path.resolve('src/img/'), filePath);
-    const destFilePath = path.resolve(routes.img.dest, filePathFromSrc);
-
-    del.sync(destFilePath);
-  });
-  gulp.watch(routes.scss.watch, styles);
-  gulp.watch(routes.js.watch, js);
+  gulp.watch(routes.img.src, img).on('unlink', function(filePath) { watchUnlink('src/img/', filePath) });
+  gulp.watch(routes.scss.watch, styles).on('unlink', function(filePath) { watchUnlink('src/scss/', filePath) });
+  gulp.watch(routes.js.watch, js).on('unlink', function(filePath) { watchUnlink('src/js/', filePath) });
 }
 
 // deploy
